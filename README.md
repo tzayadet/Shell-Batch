@@ -50,7 +50,7 @@ Package only scripts you own or whose origin you have verified. A packaged execu
 
 ## Showcase and deployment
 
-The [showcase source](docs/index.html) documents the Windows utility; it cannot run Batch scripts in a browser. GitHub Pages deployment is gated by the `ENABLE_PAGES=true` Actions variable.
+The [showcase source](docs/index.html) documents the Windows utility; it cannot run Batch scripts in a browser. Pages deployment is gated by the `ENABLE_PAGES=true` Actions variable.
 
 ## License
 
