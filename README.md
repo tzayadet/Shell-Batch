@@ -10,12 +10,15 @@ Script interactivo de Windows Batch para localizar archivos Python y empaquetarl
 - Permite indicar una ruta personalizada o seleccionar un archivo.
 - Incluye opciones de configuración antes de compilar.
 - Organiza los resultados en una carpeta de salida.
+- Evita sobrescribir ejecutables existentes mediante nombres incrementales.
+- Mantiene los directorios de trabajo y archivos temporales dentro de la carpeta de salida; no elimina carpetas `build` ni archivos `.spec` del directorio de origen.
 
 ## Requisitos
 
 - Windows.
 - Python instalado y disponible en PATH.
 - Conexión a Internet durante la instalación de PyInstaller, si no está instalado.
+- Dependencia fijada en `requirements.txt` (PyInstaller 6.x).
 - Permisos suficientes para instalar paquetes y escribir en la carpeta de salida.
 
 ## Uso
