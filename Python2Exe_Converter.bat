@@ -87,6 +87,7 @@ if not exist "%OUTPUT_DIR%" mkdir "%OUTPUT_DIR%"
 
 :: Buscar archivos Python
 set count=0
+set failed_count=0
 for /f "delims=" %%i in ('dir /b "%SEARCH_PATH%\*.py" 2^>nul') do (
     set /a count+=1
     set "file!count!=%%i"
@@ -128,9 +129,15 @@ for /L %%i in (1,1,%count%) do (
     set "current_file=!file%%i!"
     echo Convirtiendo: !current_file!
     call :CONVERT_FILE "%SEARCH_PATH%\!current_file!"
+    if errorlevel 1 set /a failed_count+=1
 )
 echo.
-echo [OK] Conversion completada. Archivos guardados en: %OUTPUT_DIR%
+if !failed_count! gtr 0 (
+    echo [WARN] Conversion terminada con !failed_count! archivo(s) fallido(s).
+) else (
+    echo [OK] Todos los archivos se convirtieron correctamente.
+)
+echo Archivos guardados en: %OUTPUT_DIR%
 pause
 goto MAIN_MENU
 
@@ -139,7 +146,11 @@ echo.
 echo Convirtiendo: %selected_file%
 call :CONVERT_FILE "%full_path%"
 echo.
-echo [OK] Conversion completada. Archivo guardado en: %OUTPUT_DIR%
+if errorlevel 1 (
+    echo [ERROR] No se pudo generar el ejecutable.
+) else (
+    echo [OK] Archivo guardado en: %OUTPUT_DIR%
+)
 pause
 goto MAIN_MENU
 
@@ -184,7 +195,11 @@ echo.
 echo Convirtiendo archivo especifico...
 call :CONVERT_FILE "%specific_file%"
 echo.
-echo [OK] Conversion completada. Archivo guardado en: %OUTPUT_DIR%
+if errorlevel 1 (
+    echo [ERROR] No se pudo generar el ejecutable.
+) else (
+    echo [OK] Archivo guardado en: %OUTPUT_DIR%
+)
 pause
 goto MAIN_MENU
 
@@ -262,13 +277,14 @@ echo ----------------------------------------
 python -m PyInstaller --onefile %WINDOWED_MODE% --name "%output_name%" --distpath "%OUTPUT_DIR%" --workpath "%build_path%" --specpath "%spec_path%" --clean --noconfirm "%input_file%" --log-level WARN
 if errorlevel 1 (
     echo [ERROR] PyInstaller ha devuelto un error para %input_file%.
-    goto :eof
+    exit /b 1
 )
 
 if exist "%output_path%" (
     echo [OK] %output_name%.exe creado correctamente.
 ) else (
     echo [ERROR] No se ha encontrado el ejecutable esperado: %output_path%
+    exit /b 1
 )
 
-goto :eof
+exit /b 0
