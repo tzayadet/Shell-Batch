@@ -26,10 +26,10 @@ if errorlevel 1 (
 )
 
 :: Verificar si PyInstaller está instalado
-pip show pyinstaller >nul 2>&1
+python -m pip show pyinstaller >nul 2>&1
 if errorlevel 1 (
     echo [INFO] PyInstaller no esta instalado. Instalando...
-    pip install pyinstaller
+    python -m pip install -r "%~dp0requirements.txt"
     if errorlevel 1 (
         echo [ERROR] No se pudo instalar PyInstaller
         pause
@@ -109,7 +109,7 @@ set /p "selection=Selecciona el archivo a convertir: "
 if "%selection%"=="99" goto MAIN_MENU
 if "%selection%"=="0" goto CONVERT_ALL
 
-if %selection% gtr %count% (
+if not defined file!selection! (
     echo Seleccion invalida.
     pause
     goto SEARCH_FILES
@@ -150,7 +150,7 @@ echo === RUTA PERSONALIZADA ===
 echo.
 set /p "custom_path=Introduce la ruta completa del directorio: "
 
-if not exist "%custom_path%" (
+if not exist "%custom_path%\." (
     echo [ERROR] La ruta especificada no existe.
     pause
     goto MAIN_MENU
@@ -232,26 +232,43 @@ goto ADVANCED_OPTIONS
 :CONVERT_FILE
 set "input_file=%~1"
 set "file_name=%~n1"
-set "output_path=%OUTPUT_DIR%\%file_name%.exe"
+set "output_name=%file_name%"
+set "suffix=2"
+
+if not exist "%OUTPUT_DIR%\." mkdir "%OUTPUT_DIR%"
+if errorlevel 1 (
+    echo [ERROR] No se pudo crear la carpeta de salida.
+    goto :eof
+)
+
+:: No sobrescribir ejecutables existentes.
+:CHECK_OUTPUT_NAME
+if exist "%OUTPUT_DIR%\%output_name%.exe" (
+    set "output_name=%file_name%_!suffix!"
+    set /a suffix+=1
+    goto CHECK_OUTPUT_NAME
+)
+set "output_path=%OUTPUT_DIR%\%output_name%.exe"
+set "build_path=%OUTPUT_DIR%\.build\%output_name%"
+set "spec_path=%OUTPUT_DIR%\.spec"
 
 echo.
 echo ----------------------------------------
-echo Procesando: %file_name%.py
+echo Procesando: %input_file%
+echo Salida: %output_name%.exe
 echo ----------------------------------------
 
-:: Ejecutar PyInstaller
-cd /d "%~dp1"
-pyinstaller --onefile %WINDOWED_MODE% --distpath "%OUTPUT_DIR%" "%input_file%" --log-level WARN
+:: Construir dentro de la carpeta de salida, sin borrar archivos del origen.
+python -m PyInstaller --onefile %WINDOWED_MODE% --name "%output_name%" --distpath "%OUTPUT_DIR%" --workpath "%build_path%" --specpath "%spec_path%" --clean --noconfirm "%input_file%" --log-level WARN
+if errorlevel 1 (
+    echo [ERROR] PyInstaller ha devuelto un error para %input_file%.
+    goto :eof
+)
 
-:: Limpiar archivos temporales
-if exist "%~dp1build" rmdir /s /q "%~dp1build"
-if exist "%~dp1%file_name%.spec" del "%~dp1%file_name%.spec"
-
-:: Verificar si se creó el ejecutable
 if exist "%output_path%" (
-    echo [OK] %file_name%.exe creado exitosamente
+    echo [OK] %output_name%.exe creado correctamente.
 ) else (
-    echo [ERROR] Fallo al crear %file_name%.exe
+    echo [ERROR] No se ha encontrado el ejecutable esperado: %output_path%
 )
 
 goto :eof
