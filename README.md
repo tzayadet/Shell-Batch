@@ -1,46 +1,57 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/WINDOWS_UTILITY-PYTHON_TO_EXE-101010?style=for-the-badge&labelColor=050805&color=00FF41" alt="Python to EXE Converter"/>
+  <img src="https://img.shields.io/badge/BATCH-PYINSTALLER-101010?style=for-the-badge&logo=windows&logoColor=00FF41" alt="Windows Batch"/>
+</p>
+
 # Python to EXE Converter
+
+Interactive Windows Batch utility for locating Python scripts and packaging them as executables with PyInstaller.
+
+<p align="center">
+  <a href="https://github.com/tzayadet/Shell-Batch/blob/main/docs/index.html"><strong>SHOWCASE SOURCE</strong></a> ·
+  <a href="https://github.com/tzayadet/Shell-Batch"><strong>SOURCE CODE</strong></a>
+</p>
 
 [![GitHub Pages](https://github.com/tzayadet/Shell-Batch/actions/workflows/pages.yml/badge.svg)](https://github.com/tzayadet/Shell-Batch/actions/workflows/pages.yml)
 
-Script interactivo de Windows Batch para localizar archivos Python y empaquetarlos como ejecutables mediante PyInstaller.
+## Features
 
-## Funcionalidades
+- Checks whether Python is available.
+- Checks for PyInstaller and installs it when required.
+- Searches Desktop, Documents and Downloads.
+- Accepts a custom path or direct file selection.
+- Provides build options before compilation.
+- Organises generated files in an output directory.
+- Avoids overwriting existing executables through incremental filenames.
+- Keeps build directories and temporary files inside the output folder; it does not delete `build` folders or `.spec` files from the source directory.
 
-- Comprueba la disponibilidad de Python.
-- Comprueba e instala PyInstaller cuando es necesario.
-- Permite buscar scripts en Desktop, Documents y Downloads.
-- Permite indicar una ruta personalizada o seleccionar un archivo.
-- Incluye opciones de configuración antes de compilar.
-- Organiza los resultados en una carpeta de salida.
-- Evita sobrescribir ejecutables existentes mediante nombres incrementales.
-- Mantiene los directorios de trabajo y archivos temporales dentro de la carpeta de salida; no elimina carpetas `build` ni archivos `.spec` del directorio de origen.
-
-## Requisitos
+## Requirements
 
 - Windows.
-- Python instalado y disponible en PATH.
-- Conexión a Internet durante la instalación de PyInstaller, si no está instalado.
-- Dependencia fijada en `requirements.txt` (PyInstaller 6.x).
-- Permisos suficientes para instalar paquetes y escribir en la carpeta de salida.
+- Python installed and available in PATH.
+- Internet access during PyInstaller installation, if it is not already installed.
+- Pinned dependency in `requirements.txt` (PyInstaller 6.x).
+- Sufficient permissions to install packages and write to the output directory.
 
-## Uso
+## Usage
 
-Ejecuta `Python2Exe_Converter.bat` desde el Explorador de archivos o desde CMD y sigue el menú.
+Run `Python2Exe_Converter.bat` from File Explorer or CMD and follow the menu.
 
-## Tecnologías
+## Technology
 
 - Windows Batch
 - Python
 - pip
 - PyInstaller
 
-## Seguridad
+## Security
 
-Compila únicamente scripts propios o código cuya procedencia hayas verificado. Un ejecutable empaquetado no queda automáticamente firmado ni libre de detecciones antivirus.
+Package only scripts you own or whose origin you have verified. A packaged executable is not automatically signed or exempt from antivirus detection.
 
-## Project showcase
+## Showcase and deployment
 
-[Open the Python to EXE Converter showcase](https://tzayadet.github.io/Shell-Batch/) · [Showcase source](docs/index.html)
+The [showcase source](docs/index.html) documents the Windows utility; it cannot run Batch scripts in a browser. GitHub Pages deployment is gated by the `ENABLE_PAGES=true` Actions variable.
 
-The page is documentation only. The Batch application runs on Windows and cannot be executed in a browser. To publish the page, select **Settings → Pages → Build and deployment → Source → GitHub Actions** and set the repository Actions variable `ENABLE_PAGES=true` under **Settings → Secrets and variables → Actions → Variables**.
+## License
 
+See [LICENSE](LICENSE).
